@@ -35,11 +35,20 @@ public class Manager {
             System.out.print("Enter year (e.g. 2026): ");
             int year = Integer.parseInt(Main.scanner.nextLine());
 
+            if (month < 1 || month > 12) {
+                System.out.println("Invalid month. Please enter a value between 1 and 12.");
+                return;
+            }
+            if (year < 2000 || year > 2100) {
+                System.out.println("Invalid year.");
+                return;
+            }
+
             System.out.println("\n=== Monthly Sales Summary: " + month + "/" + year + " ===");
 
             // Sales per product
             System.out.println("\n-- Sales per Product --");
-            PreparedStatement ps = Main.conn.prepareStatement(
+            PreparedStatement ps = Main.emartConn.prepareStatement(
                 "SELECT c.stock_number, ci.manufacturer, ci.model_number, " +
                 "SUM(c.quantity) as total_qty, SUM(c.quantity * c.unit_price) as total_sales " +
                 "FROM Contains c " +
@@ -65,7 +74,7 @@ public class Manager {
 
             // Sales per category
             System.out.println("\n-- Sales per Category --");
-            PreparedStatement catPs = Main.conn.prepareStatement(
+            PreparedStatement catPs = Main.emartConn.prepareStatement(
                 "SELECT ci.category, SUM(c.quantity) as total_qty, " +
                 "SUM(c.quantity * c.unit_price) as total_sales " +
                 "FROM Contains c " +
@@ -77,15 +86,18 @@ public class Manager {
             catPs.setInt(1, month);
             catPs.setInt(2, year);
             ResultSet catRs = catPs.executeQuery();
+            boolean catFound = false;
             while (catRs.next()) {
+                catFound = true;
                 System.out.println("Category: " + catRs.getString("category") +
                                    " | Qty Sold: " + catRs.getInt("total_qty") +
                                    " | Revenue: $" + String.format("%.2f", catRs.getDouble("total_sales")));
             }
+            if (!catFound) System.out.println("No category data found for this period.");
 
             // Top customer
             System.out.println("\n-- Top Customer --");
-            PreparedStatement topPs = Main.conn.prepareStatement(
+            PreparedStatement topPs = Main.emartConn.prepareStatement(
                 "SELECT o.customer_id, cu.first_name, cu.last_name, " +
                 "SUM(o.total_price) as total_spent " +
                 "FROM CustomerOrder o " +
@@ -120,13 +132,12 @@ public class Manager {
             int choice = Integer.parseInt(Main.scanner.nextLine());
 
             if (choice == 1) {
-                // Auto-adjust all customers
-                ResultSet customers = Main.conn.createStatement().executeQuery(
+                ResultSet customers = Main.emartConn.createStatement().executeQuery(
                     "SELECT customer_id FROM Customer");
                 int updated = 0;
                 while (customers.next()) {
                     String cid = customers.getString("customer_id");
-                    PreparedStatement ps = Main.conn.prepareStatement(
+                    PreparedStatement ps = Main.emartConn.prepareStatement(
                         "SELECT SUM(total_price) FROM (" +
                         "SELECT total_price FROM CustomerOrder WHERE customer_id = ? " +
                         "ORDER BY order_number DESC FETCH FIRST 3 ROWS ONLY)");
@@ -141,14 +152,14 @@ public class Manager {
                     else if (total > 0)   newStatus = "Green";
                     else                  newStatus = "New";
 
-                    PreparedStatement updatePs = Main.conn.prepareStatement(
+                    PreparedStatement updatePs = Main.emartConn.prepareStatement(
                         "UPDATE Customer SET status = ? WHERE customer_id = ?");
                     updatePs.setString(1, newStatus);
                     updatePs.setString(2, cid);
                     updatePs.executeUpdate();
                     updated++;
                 }
-                Main.conn.commit();
+                Main.emartConn.commit();
                 System.out.println("Updated status for " + updated + " customers.");
 
             } else if (choice == 2) {
@@ -163,20 +174,22 @@ public class Manager {
                     return;
                 }
 
-                PreparedStatement ps = Main.conn.prepareStatement(
+                PreparedStatement ps = Main.emartConn.prepareStatement(
                     "UPDATE Customer SET status = ? WHERE customer_id = ?");
                 ps.setString(1, newStatus);
                 ps.setString(2, cid);
                 int rows = ps.executeUpdate();
                 if (rows == 0) {
                     System.out.println("Customer not found.");
+                    Main.emartConn.rollback();
                 } else {
-                    Main.conn.commit();
+                    Main.emartConn.commit();
                     System.out.println("Status updated to " + newStatus + ".");
                 }
             }
 
         } catch (SQLException e) {
+            try { Main.emartConn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             System.out.println("Error: " + e.getMessage());
         }
     }
@@ -186,10 +199,11 @@ public class Manager {
             System.out.print("Enter manufacturer name: ");
             String manufacturer = Main.scanner.nextLine();
 
-            PreparedStatement ps = Main.conn.prepareStatement(
+            // Use LIKE so partial names work (e.g. "hp" matches "HP")
+            PreparedStatement ps = Main.emartConn.prepareStatement(
                 "SELECT stock_number, model_number, price FROM CatalogItem " +
-                "WHERE LOWER(manufacturer) = LOWER(?)");
-            ps.setString(1, manufacturer);
+                "WHERE LOWER(manufacturer) LIKE LOWER(?)");
+            ps.setString(1, "%" + manufacturer + "%");
             ResultSet rs = ps.executeQuery();
 
             System.out.println("\n=== Order to Manufacturer: " + manufacturer + " ===");
@@ -217,7 +231,7 @@ public class Manager {
             System.out.print("Enter stock number: ");
             String stockNum = Main.scanner.nextLine();
 
-            PreparedStatement checkPs = Main.conn.prepareStatement(
+            PreparedStatement checkPs = Main.emartConn.prepareStatement(
                 "SELECT stock_number, manufacturer, model_number, price " +
                 "FROM CatalogItem WHERE stock_number = ?");
             checkPs.setString(1, stockNum);
@@ -239,15 +253,16 @@ public class Manager {
                 return;
             }
 
-            PreparedStatement ps = Main.conn.prepareStatement(
+            PreparedStatement ps = Main.emartConn.prepareStatement(
                 "UPDATE CatalogItem SET price = ? WHERE stock_number = ?");
             ps.setDouble(1, newPrice);
             ps.setString(2, stockNum);
             ps.executeUpdate();
-            Main.conn.commit();
+            Main.emartConn.commit();
             System.out.println("Price updated to $" + String.format("%.2f", newPrice));
 
         } catch (SQLException e) {
+            try { Main.emartConn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             System.out.println("Error: " + e.getMessage());
         }
     }
@@ -259,8 +274,8 @@ public class Manager {
             System.out.print("Are you sure? (yes/no): ");
             if (!Main.scanner.nextLine().equalsIgnoreCase("yes")) return;
 
-            // Delete Contains rows for old orders first (foreign key)
-            Main.conn.createStatement().executeUpdate(
+            // Delete Contains rows first due to foreign key constraint
+            Main.emartConn.createStatement().executeUpdate(
                 "DELETE FROM Contains WHERE order_number IN (" +
                 "SELECT order_number FROM CustomerOrder WHERE order_number NOT IN (" +
                 "SELECT order_number FROM (" +
@@ -269,17 +284,18 @@ public class Manager {
                 "FROM CustomerOrder) WHERE rn <= 3))");
 
             // Delete old orders
-            int deleted = Main.conn.createStatement().executeUpdate(
+            int deleted = Main.emartConn.createStatement().executeUpdate(
                 "DELETE FROM CustomerOrder WHERE order_number NOT IN (" +
                 "SELECT order_number FROM (" +
                 "SELECT order_number, ROW_NUMBER() OVER " +
                 "(PARTITION BY customer_id ORDER BY order_number DESC) as rn " +
                 "FROM CustomerOrder) WHERE rn <= 3)");
 
-            Main.conn.commit();
+            Main.emartConn.commit();
             System.out.println("Deleted " + deleted + " old transaction(s).");
 
         } catch (SQLException e) {
+            try { Main.emartConn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             System.out.println("Error: " + e.getMessage());
         }
     }
