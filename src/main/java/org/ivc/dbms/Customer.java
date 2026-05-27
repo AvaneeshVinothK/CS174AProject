@@ -441,7 +441,12 @@ public class Customer {
 
             // Fetch cart items
             PreparedStatement ps = Main.emartConn.prepareStatement(
-                "SELECT * FROM Contains WHERE order_number = ?");
+                "SELECT c.stock_number, c.quantity, i.price " +
+                "FROM Contains c " +
+                "JOIN CatalogItem i ON c.stock_number = i.stock_number " +
+                "WHERE c.order_number = ?"
+            );
+
             ps.setInt(1, orderNum);
             ResultSet rs = ps.executeQuery();
 
@@ -449,7 +454,7 @@ public class Customer {
             while (rs.next()) {
                 cart.add(new String[]{
                     rs.getString("stock_number"),
-                    rs.getString("unit_price"),
+                    String.valueOf(rs.getDouble("price")),
                     String.valueOf(rs.getInt("quantity"))
                 });
             }
