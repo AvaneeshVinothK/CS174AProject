@@ -225,6 +225,23 @@ public class Depot {
                 String stockNum = items.getString("stock_number");
                 int qty = items.getInt("quantity");
 
+                // Check sufficient stock before decrementing
+                PreparedStatement stockCheckPs = Main.depotConn.prepareStatement(
+                    "SELECT quantity FROM InventoryItem WHERE stock_number = ?");
+                stockCheckPs.setString(1, stockNum);
+                ResultSet stockRs = stockCheckPs.executeQuery();
+                if (!stockRs.next()) {
+                    System.out.println("  [" + stockNum + "] NOT FOUND in inventory — skipping.");
+                    continue;
+                }
+                int available = stockRs.getInt("quantity");
+                if (available < qty) {
+                    System.out.println("  [" + stockNum + "] INSUFFICIENT STOCK: need " +
+                        qty + ", have " + available + " — rolling back.");
+                    Main.depotConn.rollback();
+                    return;
+                }
+
                 PreparedStatement updatePs = Main.depotConn.prepareStatement(
                     "UPDATE InventoryItem SET quantity = quantity - ? " +
                     "WHERE stock_number = ?");
@@ -254,16 +271,34 @@ public class Depot {
     public static void fillOrderAuto(List<String[]> cart) {
         try {
             for (String[] item : cart) {
+                String stockNum = item[0];
+                int qty = Integer.parseInt(item[2]);
+
+                // Check sufficient stock before decrementing
+                PreparedStatement stockCheckPs = Main.depotConn.prepareStatement(
+                    "SELECT quantity FROM InventoryItem WHERE stock_number = ?");
+                stockCheckPs.setString(1, stockNum);
+                ResultSet stockRs = stockCheckPs.executeQuery();
+                if (!stockRs.next()) {
+                    throw new SQLException("Stock number " + stockNum + " not found in eDEPOT inventory.");
+                }
+                int available = stockRs.getInt("quantity");
+                if (available < qty) {
+                    throw new SQLException("Insufficient stock for " + stockNum +
+                        ": need " + qty + ", have " + available + ".");
+                }
+
                 PreparedStatement updatePs = Main.depotConn.prepareStatement(
                     "UPDATE InventoryItem SET quantity = quantity - ? " +
                     "WHERE stock_number = ?");
-                updatePs.setInt(1, Integer.parseInt(item[2]));
-                updatePs.setString(2, item[0]);
+                updatePs.setInt(1, qty);
+                updatePs.setString(2, stockNum);
                 updatePs.executeUpdate();
-            }
+        }
             Main.depotConn.commit();
             checkReplenishment();
         } catch (SQLException e) {
+            try { Main.depotConn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             try { Main.depotConn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             System.out.println("eDEPOT fill order failed: " + e.getMessage());
         }
@@ -303,7 +338,7 @@ public class Depot {
             PreparedStatement lowItemsPs = Main.depotConn.prepareStatement(
                 "SELECT stock_number, max_stock_level, quantity " +
                 "FROM InventoryItem " +
-                "WHERE manufacturer = ? AND quantity < min_stock_level");
+                "WHERE manufacturer = ? AND quantity < max_stock_level");
             lowItemsPs.setString(1, manufacturer);
             ResultSet lowItems = lowItemsPs.executeQuery();
 

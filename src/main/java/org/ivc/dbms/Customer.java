@@ -369,10 +369,10 @@ public class Customer {
             updateStatus.setString(2, loggedInCustomerId);
             updateStatus.executeUpdate();
 
-            Main.emartConn.commit();
-
             // Notify eDEPOT to fill the order
             Depot.fillOrderAuto(cart);
+
+            Main.emartConn.commit();
 
             System.out.println("Order placed! Your order number is: " + orderNum);
             System.out.println("Your new status: " + newStatus);
