@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.ivc.dbms.ManagerTest" time="2.585" tests="16" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="25"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\Avaneesh\OneDrive\UCSB_Classes\Spring2026\CS174A\Project\project\target\test-classes;C:\Users\Avaneesh\OneDrive\UCSB_Classes\Spring2026\CS174A\Project\project\target\classes;C:\Users\Avaneesh\.m2\repository\com\oracle\database\jdbc\ojdbc11\23.7.0.25.01\ojdbc11-23.7.0.25.01.jar;C:\Users\Avaneesh\.m2\repository\com\oracle\database\security\oraclepki\23.7.0.25.01\oraclepki-23.7.0.25.01.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.2\junit-jupiter-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Avaneesh\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="America/Los_Angeles"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="25"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="C:\Users\Avaneesh\AppData\Local\Programs\Eclipse Adoptium\jdk-25.0.3.9-hotspot\bin"/>
+    <property name="sun.java.command" value="C:\Users\Avaneesh\AppData\Local\Temp\surefire13485019761140037366\surefirebooter8517008738477567835.jar C:\Users\Avaneesh\AppData\Local\Temp\surefire13485019761140037366 2026-05-26T18-31-25_845-jvmRun1 surefire1644874876461118996tmp surefire_07068988377261283505tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\Avaneesh\OneDrive\UCSB_Classes\Spring2026\CS174A\Project\project\target\test-classes;C:\Users\Avaneesh\OneDrive\UCSB_Classes\Spring2026\CS174A\Project\project\target\classes;C:\Users\Avaneesh\.m2\repository\com\oracle\database\jdbc\ojdbc11\23.7.0.25.01\ojdbc11-23.7.0.25.01.jar;C:\Users\Avaneesh\.m2\repository\com\oracle\database\security\oraclepki\23.7.0.25.01\oraclepki-23.7.0.25.01.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.2\junit-jupiter-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Avaneesh\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\Avaneesh\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\Avaneesh"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-04-21"/>
+    <property name="java.home" value="C:\Users\Avaneesh\AppData\Local\Programs\Eclipse Adoptium\jdk-25.0.3.9-hotspot"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\Avaneesh\OneDrive\UCSB_Classes\Spring2026\CS174A\Project\project"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\Avaneesh\AppData\Local\Temp\surefire13485019761140037366\surefirebooter8517008738477567835.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="25.0.3+9-LTS"/>
+    <property name="user.name" value="Avaneesh"/>
+    <property name="stdout.encoding" value="Cp1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-25.0.3+9"/>
+    <property name="maven.ext.class.path" value="C:\Users\Avaneesh\.vscode\extensions\oracle.oracle-java-25.1.0\nbcode\java\maven-nblib\netbeans-eventspy.jar"/>
+    <property name="localRepository" value="C:\Users\Avaneesh\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="C:\Users\Avaneesh\AppData\Local\Temp\"/>
+    <property name="java.version" value="25.0.3"/>
+    <property name="user.dir" value="C:\Users\Avaneesh\OneDrive\UCSB_Classes\Spring2026\CS174A\Project\project"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Users\Avaneesh\AppData\Local\Programs\Eclipse Adoptium\jdk-25.0.3.9-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\Avaneesh\AppData\Local\Programs\Eclipse Adoptium\jdk-25.0.3.9-hotspot;C:\Users\Avaneesh\AppData\Local\Programs\Eclipse Adoptium\jdk-25.0.3.9-hotspot\bin;C:\Users\Avaneesh\AppData\Local\Microsoft\WindowsApps;C:\Users\Avaneesh\AppData\Local\GitHubDesktop\bin;C:\Users\Avaneesh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Avaneesh\AppData\Local\Programs\Python\Python39\;C:\Users\Avaneesh\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Avaneesh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\Scripts;C:\Program Files\Wireshark;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="Cp1252"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="25.0.3+9-LTS"/>
+    <property name="stdin.encoding" value="Cp1252"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="69.0"/>
+  </properties>
+  <testcase name="tc33_monthlySalesSummary_withData" classname="org.ivc.dbms.ManagerTest" time="0.172"/>
+  <testcase name="tc34_monthlySalesSummary_noData" classname="org.ivc.dbms.ManagerTest" time="0.078"/>
+  <testcase name="tc35_monthlySalesSummary_invalidMonth" classname="org.ivc.dbms.ManagerTest" time="0.058"/>
+  <testcase name="tc36_autoAdjustStatus_setsGold" classname="org.ivc.dbms.ManagerTest" time="0.242"/>
+  <testcase name="tc36b_autoAdjustStatus_setsSilver" classname="org.ivc.dbms.ManagerTest" time="0.135"/>
+  <testcase name="tc37_manualStatusUpdate_success" classname="org.ivc.dbms.ManagerTest" time="0.11"/>
+  <testcase name="tc38_manualStatusUpdate_invalidStatus_rejected" classname="org.ivc.dbms.ManagerTest" time="0.05"/>
+  <testcase name="tc38b_manualStatusUpdate_nonExistentCustomer" classname="org.ivc.dbms.ManagerTest" time="0.077"/>
+  <testcase name="tc39_sendOrderToManufacturer_partialName" classname="org.ivc.dbms.ManagerTest" time="0.078"/>
+  <testcase name="tc40_sendOrderToManufacturer_notFound" classname="org.ivc.dbms.ManagerTest" time="0.086"/>
+  <testcase name="tc41_changeItemPrice_success" classname="org.ivc.dbms.ManagerTest" time="0.105"/>
+  <testcase name="tc42_changeItemPrice_negativeRejected" classname="org.ivc.dbms.ManagerTest" time="0.049"/>
+  <testcase name="tc43_changeItemPrice_itemNotFound" classname="org.ivc.dbms.ManagerTest" time="0.076"/>
+  <testcase name="tc44_deleteOldTransactions_keepsThreeMostRecent" classname="org.ivc.dbms.ManagerTest" time="0.417"/>
+  <testcase name="tc45_deleteOldTransactions_cancelled" classname="org.ivc.dbms.ManagerTest" time="0.103"/>
+  <testcase name="tc_discountRules_readsMostRecent" classname="org.ivc.dbms.ManagerTest" time="0.136"/>
+</testsuite>

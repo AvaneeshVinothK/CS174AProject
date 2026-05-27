@@ -1,20 +1,29 @@
 package org.ivc.dbms;
-
+ 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+ 
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
-import java.util.Scanner;
-
-public class Main {
-    public static Connection emartConn;
-    public static Connection depotConn;
-    public static Scanner scanner = new Scanner(System.in);
-
-    public static void main(String[] args) throws Exception {
+ 
+/**
+ * Base class for all eMART/eDEPOT tests.
+ * Sets up emartConn and depotConn once for the entire test suite,
+ * mirroring the connection logic in Main.java.
+ */
+public abstract class BaseTest {
+ 
+    protected static Connection emartConn;
+    protected static Connection depotConn;
+ 
+    @BeforeAll
+    static void setupConnections() throws Exception {
         Properties config = new Properties();
         config.load(new FileInputStream("config.properties"));
-
+ 
         // eMART connection
         String emartWallet = config.getProperty("emart.wallet");
         Properties emartProps = new Properties();
@@ -27,8 +36,7 @@ public class Main {
             "jdbc:oracle:thin:@" + config.getProperty("emart.tns") + "?TNS_ADMIN=" + emartWallet,
             emartProps);
         emartConn.setAutoCommit(false);
-        System.out.println("Connected to eMART database.");
-
+ 
         // eDEPOT connection
         String depotWallet = config.getProperty("depot.wallet");
         Properties depotProps = new Properties();
@@ -41,25 +49,25 @@ public class Main {
             "jdbc:oracle:thin:@" + config.getProperty("depot.tns") + "?TNS_ADMIN=" + depotWallet,
             depotProps);
         depotConn.setAutoCommit(false);
-        System.out.println("Connected to eDEPOT database.");
-
-        while (true) {   
-            System.out.println("\n=== Welcome to eMART ===");
-            System.out.println("1. Customer");
-            System.out.println("2. Manager");
-            System.out.println("3. eDEPOT");
-            System.out.println("4. Exit");
-            System.out.print("Choose: ");
-            int choice = Integer.parseInt(scanner.nextLine());
-
-            if (choice == 1)      Customer.customerMenu();
-            else if (choice == 2) Manager.managerMenu();
-            else if (choice == 3) Depot.depotMenu();
-            else break;
-        }
-
-        emartConn.close();
-        depotConn.close();
-        System.out.println("Goodbye!");
+ 
+        // Wire into Main so existing methods can use them if needed
+        Main.emartConn = emartConn;
+        Main.depotConn = depotConn;
+ 
+        System.out.println("Test DB connections established.");
+    }
+ 
+    @AfterAll
+    static void closeConnections() throws SQLException {
+        if (emartConn != null && !emartConn.isClosed()) emartConn.close();
+        if (depotConn != null && !depotConn.isClosed()) depotConn.close();
+        System.out.println("Test DB connections closed.");
+    }
+ 
+    /** Helper: rolls back both connections safely — call in @AfterEach */
+    protected void rollbackAll() {
+        try { emartConn.rollback(); } catch (SQLException e) { e.printStackTrace(); }
+        try { depotConn.rollback(); } catch (SQLException e) { e.printStackTrace(); }
     }
 }
+ 
