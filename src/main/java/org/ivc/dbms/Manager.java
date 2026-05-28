@@ -3,7 +3,9 @@ package org.ivc.dbms;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Manager {
 
@@ -132,12 +134,17 @@ public class Manager {
             int choice = Integer.parseInt(Main.scanner.nextLine());
 
             if (choice == 1) {
-                ResultSet customers = Main.emartConn.createStatement().executeQuery(
-                    "SELECT customer_id FROM Customer");
-                int updated = 0;
-                while (customers.next()) {
-                    String cid = customers.getString("customer_id");
-                    PreparedStatement ps = Main.emartConn.prepareStatement(
+                  ResultSet customers = Main.emartConn.createStatement().executeQuery(
+                      "SELECT customer_id FROM Customer");
+                  List<String> customerIds = new ArrayList<>();
+                  while (customers.next()) {
+                      customerIds.add(customers.getString("customer_id"));
+                  }
+                  customers.close();
+
+                  int updated = 0;
+                  for (String cid : customerIds) {
+                      PreparedStatement ps = Main.emartConn.prepareStatement(
                         "SELECT SUM(total_price) FROM (" +
                         "SELECT total_price FROM CustomerOrder WHERE customer_id = ? " +
                         "ORDER BY order_number DESC FETCH FIRST 3 ROWS ONLY)");
@@ -218,7 +225,7 @@ public class Manager {
             if (!found) {
                 System.out.println("No products found for manufacturer: " + manufacturer);
             } else {
-                System.out.println("\n(Order printed above — send to manufacturer.)");
+                System.out.println("\n(Order printed above - send to manufacturer.)");
             }
 
         } catch (SQLException e) {
